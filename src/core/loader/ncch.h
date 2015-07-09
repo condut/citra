@@ -163,7 +163,7 @@ namespace Loader {
 /// Loads an NCCH file (e.g. from a CCI, or the first NCCH in a CXI)
 class AppLoader_NCCH final : public AppLoader {
 public:
-    AppLoader_NCCH(std::unique_ptr<FileUtil::IOFile>&& file, std::string filepath)
+    AppLoader_NCCH(std::unique_ptr<FileUtil::IOFile>&& file, const std::string& filepath)
         : AppLoader(std::move(file)), filepath(filepath) { }
 
     /**

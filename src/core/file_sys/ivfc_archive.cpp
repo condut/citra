@@ -21,7 +21,7 @@ std::string IVFCArchive::GetName() const {
 }
 
 std::unique_ptr<FileBackend> IVFCArchive::OpenFile(const Path& path, const Mode mode) const {
-    return Common::make_unique<IVFCFile>(m_romfs_file, m_offset, m_size);
+    return Common::make_unique<IVFCFile>(romfs_file, data_offset, data_size);
 }
 
 bool IVFCArchive::DeleteFile(const Path& path) const {
@@ -63,10 +63,10 @@ std::unique_ptr<DirectoryBackend> IVFCArchive::OpenDirectory(const Path& path) c
 
 size_t IVFCFile::Read(const u64 offset, const u32 length, u8* buffer) const {
     LOG_TRACE(Service_FS, "called offset=%llu, length=%d", offset, length);
-    m_romfs_file->Seek(m_offset + offset, SEEK_SET);
-    u32 read_length = (u32) std::min((u64) length, m_size - offset);
+    romfs_file->Seek(data_offset + offset, SEEK_SET);
+    u32 read_length = (u32)std::min((u64)length, data_size - offset);
 
-    return m_romfs_file->ReadBytes(buffer, read_length);
+    return romfs_file->ReadBytes(buffer, read_length);
 }
 
 size_t IVFCFile::Write(const u64 offset, const u32 length, const u32 flush, const u8* buffer) const {
@@ -75,7 +75,7 @@ size_t IVFCFile::Write(const u64 offset, const u32 length, const u32 flush, cons
 }
 
 size_t IVFCFile::GetSize() const {
-    return sizeof(u8) * m_size;
+    return sizeof(u8) * data_size;
 }
 
 bool IVFCFile::SetSize(const u64 size) const {

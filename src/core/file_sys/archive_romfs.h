@@ -27,9 +27,9 @@ public:
     ResultCode Format(const Path& path) override;
 
 private:
-    std::shared_ptr<FileUtil::IOFile> m_romfs_file;
-    u64 m_offset;
-    u64 m_size;
+    std::shared_ptr<FileUtil::IOFile> romfs_file;
+    u64 data_offset;
+    u64 data_size;
 };
 
 } // namespace FileSys
