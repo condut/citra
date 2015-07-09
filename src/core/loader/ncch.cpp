@@ -275,7 +275,7 @@ ResultStatus AppLoader_NCCH::ReadLogo(std::vector<u8>& buffer) const {
     return LoadSectionExeFS("logo", buffer);
 }
 
-ResultStatus AppLoader_NCCH::ReadRomFS(std::vector<u8>& buffer) const {
+ResultStatus AppLoader_NCCH::ReadRomFS(std::shared_ptr<FileUtil::IOFile>& romfs_file, u64& offset, u64& size) const {
     if (!file->IsOpen())
         return ResultStatus::Error;
 
@@ -287,12 +287,16 @@ ResultStatus AppLoader_NCCH::ReadRomFS(std::vector<u8>& buffer) const {
         LOG_DEBUG(Loader, "RomFS offset:           0x%08X", romfs_offset);
         LOG_DEBUG(Loader, "RomFS size:             0x%08X", romfs_size);
 
-        buffer.resize(romfs_size);
-
-        file->Seek(romfs_offset, SEEK_SET);
-        if (file->ReadBytes(&buffer[0], romfs_size) != romfs_size)
+        if (file->GetSize () < romfs_offset + romfs_size)
             return ResultStatus::Error;
 
+        // We reopen the file, to avoid reuse of the file offset
+        romfs_file.reset(new FileUtil::IOFile(filepath, "rb"));
+        offset = romfs_offset;
+        size = romfs_size;
+
+        if (!romfs_file->IsOpen())
+            return ResultStatus::Error;
         return ResultStatus::Success;
     }
     LOG_DEBUG(Loader, "NCCH has no RomFS");
