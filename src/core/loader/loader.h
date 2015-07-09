@@ -93,7 +93,7 @@ public:
 
     /**
      * Get the RomFS of the application
-     * Since the RomFS is huge, we return a file reference instead of copying to a buffer
+     * Since the RomFS can be huge, we return a file reference instead of copying to a buffer
      * @param romfs_file The file containing the RomFS
      * @param offset The offset the romfs begins on
      * @param size The size of the romfs

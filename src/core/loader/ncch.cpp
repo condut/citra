@@ -289,13 +289,14 @@ ResultStatus AppLoader_NCCH::ReadRomFS(std::shared_ptr<FileUtil::IOFile>& romfs_
         if (file->GetSize () < romfs_offset + romfs_size)
             return ResultStatus::Error;
 
-        // We reopen the file, to avoid reuse of the file offset
+        // We reopen the file, to allow its position to be independent from file's
         romfs_file.reset(new FileUtil::IOFile(filepath, "rb"));
+        if (!romfs_file->IsOpen())
+            return ResultStatus::Error;
+
         offset = romfs_offset;
         size = romfs_size;
 
-        if (!romfs_file->IsOpen())
-            return ResultStatus::Error;
         return ResultStatus::Success;
     }
     LOG_DEBUG(Loader, "NCCH has no RomFS");
