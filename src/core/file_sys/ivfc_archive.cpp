@@ -75,7 +75,7 @@ size_t IVFCFile::Write(const u64 offset, const u32 length, const u32 flush, cons
 }
 
 size_t IVFCFile::GetSize() const {
-    return sizeof(u8) * data_size;
+    return data_size; // TODO: return value will overflow on 32-bit machines
 }
 
 bool IVFCFile::SetSize(const u64 size) const {
